@@ -29,11 +29,9 @@ export default function LoginPage() {
       toast.success('Login successful!');
       console.log('About to redirect to /admin...');
       
-      // Force redirect after a short delay
-      setTimeout(() => {
-        console.log('Redirecting now...');
-        window.location.href = '/admin';
-      }, 1000);
+      // Use replace instead of href for better redirect
+      console.log('Redirecting now...');
+      window.location.replace('/admin');
     } catch (error: unknown) {
       console.error('Login error:', error);
       const message = error instanceof Error ? error.message : 'Login failed';
