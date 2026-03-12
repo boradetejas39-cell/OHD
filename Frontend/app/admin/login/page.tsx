@@ -23,13 +23,17 @@ export default function LoginPage() {
       // Store token in localStorage as fallback for cross-domain
       if (response.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.user));
+        console.log('User stored in localStorage');
       }
       
       toast.success('Login successful!');
+      console.log('About to redirect to /admin...');
+      
       // Force redirect after a short delay
       setTimeout(() => {
+        console.log('Redirecting now...');
         window.location.href = '/admin';
-      }, 500);
+      }, 1000);
     } catch (error: unknown) {
       console.error('Login error:', error);
       const message = error instanceof Error ? error.message : 'Login failed';
