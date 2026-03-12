@@ -47,6 +47,13 @@ export default function AdminDashboard() {
   const [sectionsCount, setSectionsCount] = useState(0);
 
   useEffect(() => {
+    // Check authentication client-side for cross-domain scenarios
+    const user = localStorage.getItem('user');
+    if (!user) {
+      window.location.href = '/admin/login';
+      return;
+    }
+    
     fetchDashboardData();
   }, []);
 

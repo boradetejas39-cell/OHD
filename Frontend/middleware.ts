@@ -5,24 +5,13 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('token')?.value;
 
-  // Public auth routes
-  if (pathname.startsWith('/admin/login') || pathname.startsWith('/admin/signup')) {
-    if (token) {
-      // Redirect to dashboard if already logged in
-      return NextResponse.redirect(new URL('/admin', request.url));
-    }
-    return NextResponse.next();
+  // For cross-domain scenarios, handle auth client-side
+  // Only redirect from login to dashboard if token exists
+  if (pathname.startsWith('/admin/login') && token) {
+    return NextResponse.redirect(new URL('/admin', request.url));
   }
 
-  // Protect admin routes
-  if (pathname.startsWith('/admin')) {
-    if (!token) {
-      // For cross-domain scenarios, we'll handle auth check client-side
-      // Allow access but let the component handle authentication
-      return NextResponse.next();
-    }
-  }
-
+  // Allow all other admin routes - handle auth client-side
   return NextResponse.next();
 }
 
