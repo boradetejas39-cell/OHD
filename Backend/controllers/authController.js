@@ -68,6 +68,11 @@ async function login(req, res) {
   try {
     const { email, password } = req.body;
     console.log('Login attempt for:', email);
+    console.log('Environment variables check:', {
+      MONGODB_URI: process.env.MONGODB_URI ? 'SET' : 'MISSING',
+      JWT_SECRET: process.env.JWT_SECRET ? 'SET' : 'MISSING',
+      NODE_ENV: process.env.NODE_ENV || 'development'
+    });
     
     await connectDB();
 
@@ -83,6 +88,7 @@ async function login(req, res) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
+    console.log('User found, checking password...');
     // Verify password
     const isPasswordValid = await comparePassword(password, user.password);
     if (!isPasswordValid) {
@@ -90,6 +96,7 @@ async function login(req, res) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
+    console.log('Password valid, generating token...');
     // Generate token
     const token = generateToken({
       userId: user._id.toString(),
@@ -97,6 +104,7 @@ async function login(req, res) {
       role: user.role,
     });
 
+    console.log('Token generated successfully');
     // Set HTTP-only cookie
     res.cookie('token', token, {
       httpOnly: true,
@@ -116,7 +124,8 @@ async function login(req, res) {
       },
     });
   } catch (error) {
-    console.error('SERVER LOGIN ERROR:', error);
+    console.error('SERVER LOGIN ERROR:', error.message);
+    console.error('Full error:', error);
     return res.status(500).json({ 
       error: error.message || 'Login failed',
       details: process.env.NODE_ENV === 'development' ? error.stack : undefined
