@@ -13,16 +13,16 @@ export const authAPI = {
 export const companyAPI = {
   getAll: () => api.get('/companies'),
   getById: (id: string) => api.get(`/companies/${id}`),
-  create: (data: any) => api.post('/companies', data),
-  update: (id: string, data: any) => api.put(`/companies/${id}`, data),
+  create: (data: Record<string, unknown>) => api.post('/companies', data),
+  update: (id: string, data: Record<string, unknown>) => api.put(`/companies/${id}`, data),
   delete: (id: string) => api.delete(`/companies/${id}`),
 };
 
 // Section APIs
 export const sectionAPI = {
   getAll: () => api.get('/sections'),
-  create: (data: any) => api.post('/sections', data),
-  update: (id: string, data: any) => api.put(`/sections/${id}`, data),
+  create: (data: Record<string, unknown>) => api.post('/sections', data),
+  update: (id: string, data: Record<string, unknown>) => api.put(`/sections/${id}`, data),
   delete: (id: string) => api.delete(`/sections/${id}`),
 };
 
@@ -32,15 +32,15 @@ export const questionAPI = {
     const params = sectionId ? { sectionId } : {};
     return api.get('/questions', { params });
   },
-  create: (data: any) => api.post('/questions', data),
-  update: (id: string, data: any) => api.put(`/questions/${id}`, data),
+  create: (data: Record<string, unknown>) => api.post('/questions', data),
+  update: (id: string, data: Record<string, unknown>) => api.put(`/questions/${id}`, data),
   delete: (id: string) => api.delete(`/questions/${id}`),
 };
 
 // Response APIs
 export const responseAPI = {
   getByCompany: (companyId: string) => api.get(`/responses/companies/${companyId}`),
-  submit: (data: any) => api.post('/responses', data),
+  submit: (data: Record<string, unknown>) => api.post('/responses', data),
 };
 
 // Report APIs
@@ -68,6 +68,6 @@ export const mailAPI = {
     api.post('/mail/bulk', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
-  getLogs: (params?: any) => api.get('/mail/logs', { params }),
+  getLogs: (params?: Record<string, unknown>) => api.get('/mail/logs', { params }),
 };
 

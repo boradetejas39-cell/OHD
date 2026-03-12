@@ -54,9 +54,10 @@ export default function FillFormPage() {
       setCompanies(companyRes.data.companies || []);
       setSections(sectionRes.data.sections || []);
       setQuestions(questionRes.data.questions || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to load form data', error);
-      toast.error(error.response?.data?.error || 'Failed to load form data');
+      const message = error instanceof Error ? error.message : 'Failed to load form data';
+      toast.error(message);
     }
   };
 
@@ -89,7 +90,7 @@ export default function FillFormPage() {
     }
 
     const filledAnswers = Object.entries(answers)
-      .filter(([_, rating]) => rating)
+      .filter(([, rating]) => rating)
       .map(([questionId, rating]) => ({
         questionId,
         rating,
@@ -109,9 +110,10 @@ export default function FillFormPage() {
       });
       toast.success('Response submitted');
       setAnswers({});
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to submit response', error);
-      toast.error(error.response?.data?.error || 'Failed to submit response');
+      const message = error instanceof Error ? error.message : 'Failed to submit response';
+      toast.error(message);
     } finally {
       setSubmitting(false);
     }

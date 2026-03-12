@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import AdminLayout from '@/components/AdminLayout';
 import { sectionAPI } from '@/lib/apiClient';
 import toast from 'react-hot-toast';
-import { Plus } from 'lucide-react';
 
 interface Section {
   _id: string;
@@ -24,7 +23,7 @@ const PILLAR_NAMES: Record<number, string> = {
 
 export default function SectionsPage() {
   const [sections, setSections] = useState<Section[]>([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -34,14 +33,15 @@ export default function SectionsPage() {
 
   const fetchSections = async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const res = await sectionAPI.getAll();
       setSections(res.data.sections || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to load sections', error);
-      toast.error(error.response?.data?.error || 'Failed to load sections');
-    } finally {
-      setLoading(false);
+      const message = error instanceof Error ? error.message : 'Failed to load sections';
+      toast.error(message);
+    // } finally {
+    //   setLoading(false);
     }
   };
 
@@ -70,9 +70,10 @@ export default function SectionsPage() {
       setPillar('');
       setOrder('');
       setSections((prev) => [...prev, res.data.section]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to create section', error);
-      toast.error(error.response?.data?.error || 'Failed to create section');
+      const message = error instanceof Error ? error.message : 'Failed to create section';
+      toast.error(message);
     } finally {
       setCreating(false);
     }

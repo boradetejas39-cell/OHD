@@ -45,9 +45,10 @@ export default function EditCompanyPage() {
         typeof data.employeeCount === 'number' ? data.employeeCount : data.employeeCount || ''
       );
       setStatus((data.status as 'active' | 'inactive') || 'active');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to load company', error);
-      toast.error(error.response?.data?.error || 'Failed to load company');
+      const message = error instanceof Error ? error.message : 'Failed to load company';
+      toast.error(message);
       router.push('/admin/companies');
     } finally {
       setLoading(false);
@@ -78,9 +79,10 @@ export default function EditCompanyPage() {
       });
       toast.success('Company updated successfully');
       router.push(`/admin/companies/${companyId}`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to update company', error);
-      toast.error(error.response?.data?.error || 'Failed to update company');
+      const message = error instanceof Error ? error.message : 'Failed to update company';
+      toast.error(message);
     } finally {
       setSaving(false);
     }

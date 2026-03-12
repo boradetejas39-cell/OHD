@@ -6,7 +6,7 @@ import AdminLayout from '@/components/AdminLayout';
 import { companyAPI } from '@/lib/apiClient';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { UploadCloud, Building2, Mail, Briefcase, Users, ArrowLeft } from 'lucide-react';
+import { UploadCloud, Building2, Mail, Briefcase, Users } from 'lucide-react';
 
 export default function AddCompanyPage() {
     const router = useRouter();
@@ -43,9 +43,11 @@ export default function AddCompanyPage() {
             });
             toast.success('Company created');
             router.push('/admin/companies');
-        } catch (error: any) {
+            router.push('/admin/companies');
+        } catch (error: unknown) {
             console.error('Failed to create company', error);
-            toast.error(error.response?.data?.error || 'Failed to create company');
+            const message = error instanceof Error ? error.message : 'Failed to create company';
+            toast.error(message);
         } finally {
             setCreating(false);
         }

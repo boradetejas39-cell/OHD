@@ -33,9 +33,10 @@ export default function CompanyDetailPage() {
       setLoading(true);
       const res = await companyAPI.getById(companyId);
       setCompany(res.data.company || res.data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to load company', error);
-      toast.error(error.response?.data?.error || 'Failed to load company');
+      const message = error instanceof Error ? error.message : 'Failed to load company';
+      toast.error(message);
       router.push('/admin/companies');
     } finally {
       setLoading(false);
@@ -57,9 +58,10 @@ export default function CompanyDetailPage() {
       await companyAPI.delete(companyId);
       toast.success('Company deleted successfully');
       router.push('/admin/companies');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to delete company', error);
-      toast.error(error.response?.data?.error || 'Failed to delete company');
+      const message = error instanceof Error ? error.message : 'Failed to delete company';
+      toast.error(message);
     } finally {
       setDeleting(false);
     }

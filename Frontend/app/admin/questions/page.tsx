@@ -32,9 +32,10 @@ export default function QuestionsPage() {
       setLoading(true);
       const res = await questionAPI.getAll();
       setQuestions(res.data.questions || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to load questions', error);
-      toast.error(error.response?.data?.error || 'Failed to load questions');
+      const message = error instanceof Error ? error.message : 'Failed to load questions';
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -44,9 +45,10 @@ export default function QuestionsPage() {
     try {
       const res = await sectionAPI.getAll();
       setSections(res.data.sections || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to load sections', error);
-      toast.error(error.response?.data?.error || 'Failed to load sections');
+      const message = error instanceof Error ? error.message : 'Failed to load sections';
+      toast.error(message);
     }
   };
 
@@ -74,9 +76,10 @@ export default function QuestionsPage() {
       setText('');
       setOrder('');
       setQuestions((prev) => [...prev, res.data.question]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to create question', error);
-      toast.error(error.response?.data?.error || 'Failed to create question');
+      const message = error instanceof Error ? error.message : 'Failed to create question';
+      toast.error(message);
     } finally {
       setCreating(false);
     }

@@ -16,8 +16,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  LineChart,
-  Line,
 } from 'recharts';
 
 interface OverallStats {
@@ -68,7 +66,7 @@ export default function AdminDashboard() {
       
       // Transform section stats for charts
       if (reportData.sectionStats && Array.isArray(reportData.sectionStats)) {
-        const transformed = reportData.sectionStats.map((stat: any) => ({
+        const transformed = reportData.sectionStats.map((stat: { sectionId: string; sectionName?: string; sectionPercentage?: number; totalResponses?: number }) => ({
           sectionId: stat.sectionId,
           sectionName: stat.sectionName || 'Unknown',
           sectionPercentage: stat.sectionPercentage || 0,
@@ -79,9 +77,10 @@ export default function AdminDashboard() {
 
       setCompaniesCount(companiesRes.data.companies?.length || 0);
       setSectionsCount(sectionsRes.data.sections?.length || 0);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to load dashboard data', error);
-      toast.error(error.response?.data?.error || 'Failed to load dashboard data');
+      const message = error instanceof Error ? error.message : 'Failed to load dashboard data';
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -247,7 +246,12 @@ export default function AdminDashboard() {
                     </Pie>
                     <Tooltip 
                       contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}
-                      formatter={(...args: any[]) => [`${args[0]} votes (${args[2].payload.percentage.toFixed(1)}%)`, args[1]]}
+                      formatter={(val: unknown, name: unknown, entry: unknown) => {
+                        const value = typeof val === 'number' ? val : 0;
+                        const entryObj = entry as { payload?: { percentage?: number } };
+                        const percentage = entryObj?.payload?.percentage || 0;
+                        return [`${value} votes (${percentage.toFixed(1)}%)`, typeof name === 'string' ? name : ''];
+                      }}
                     />
                     <Legend verticalAlign="bottom" height={36} iconType="circle" />
                   </PieChart>
@@ -331,7 +335,10 @@ export default function AdminDashboard() {
                   <Tooltip 
                     cursor={{ fill: '#F8FAFC', radius: 12 }}
                     contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 50px rgba(0,0,0,0.1)' }}
-                    formatter={(...args: any[]) => [`${args[0]}%`, 'Score']}
+                    formatter={(val: unknown) => {
+                      const value = typeof val === 'number' ? val : 0;
+                      return [`${value}%`, 'Score'];
+                    }}
                   />
                   <Bar dataKey="percentage" fill="url(#colorBar)" radius={[0, 8, 8, 0]} maxBarSize={30}>
                     <defs>

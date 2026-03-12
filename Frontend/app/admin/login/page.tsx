@@ -21,17 +21,11 @@ export default function LoginPage() {
       console.log('Login response:', response.data);
       toast.success('Login successful!');
       router.push('/admin');
-    } catch (error: any) {
-      console.error('Login error full response:', error.response?.data);
-      console.error('Login error message:', error.message);
-      
-      if (error.code === 'ERR_NETWORK' || error.message?.includes('Network Error')) {
-        toast.error('Cannot connect to server. Make sure the backend is running.');
-      } else {
-        const errorMessage = error.response?.data?.error || error.response?.data?.message || error.message || 'Login failed';
-        const errorDetails = error.response?.data?.details ? `\nDetails: ${error.response.data.details}` : '';
-        toast.error(`${errorMessage}${errorDetails}`);
-      }
+      router.push('/admin');
+    } catch (error: unknown) {
+      console.error('Login error:', error);
+      const message = error instanceof Error ? error.message : 'Login failed';
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -42,7 +36,7 @@ export default function LoginPage() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <div className="mx-auto h-20 w-20 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-100 mb-4 p-3">
-            <img src="/ohdlogo.png" alt="OHD Logo" className="w-full h-full object-contain" />
+            <img src="/ohdlogo.png" alt="OHD Logo" width={60} height={60} className="w-full h-full object-contain" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900">Admin Login</h2>
           <p className="text-gray-500 text-sm mt-1">Sign in to manage the OHD platform.</p>

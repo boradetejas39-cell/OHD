@@ -15,8 +15,7 @@ import {
   FileEdit,
   LogOut,
   Menu,
-  X,
-  ChevronRight
+  X
 } from 'lucide-react';
 
 const navigation = [
@@ -39,8 +38,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       await authAPI.logout();
       toast.success('Logged out successfully');
       router.push('/admin/login');
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Logout failed');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Logout failed';
+      toast.error(message);
     }
   };
 
@@ -65,7 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="flex items-center justify-between h-20 px-6 border-b border-slate-800 bg-slate-900/20">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-lg p-1.5 transition-transform hover:scale-105">
-                <img src="/ohdlogo.png" alt="OHD Logo" className="w-full h-full object-contain" />
+                <img src="/ohdlogo.png" alt="OHD Logo" width={40} height={40} className="w-full h-full object-contain" />
               </div>
               <h1 className="text-xl font-bold text-white tracking-tight">OHD <span className="text-primary-400">Admin</span></h1>
             </div>

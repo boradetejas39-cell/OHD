@@ -26,9 +26,10 @@ export default function CompaniesPage() {
       setLoading(true);
       const res = await companyAPI.getAll();
       setCompanies(res.data.companies || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to load companies', error);
-      toast.error(error.response?.data?.error || 'Failed to load companies');
+      const message = error instanceof Error ? error.message : 'Failed to load companies';
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -44,8 +45,9 @@ export default function CompaniesPage() {
       await companyAPI.delete(id);
       setCompanies((prev) => prev.filter((c) => c._id !== id));
       toast.success('Company deleted successfully');
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to delete company');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to delete company';
+      toast.error(message);
     }
   };
 
