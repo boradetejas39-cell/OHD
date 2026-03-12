@@ -19,9 +19,17 @@ export default function LoginPage() {
       console.log('Attempting login with:', { email });
       const response = await authAPI.login({ email, password });
       console.log('Login response:', response.data);
+      
+      // Store token in localStorage as fallback for cross-domain
+      if (response.data.user) {
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      
       toast.success('Login successful!');
-      router.push('/admin');
-      router.push('/admin');
+      // Force redirect after a short delay
+      setTimeout(() => {
+        window.location.href = '/admin';
+      }, 500);
     } catch (error: unknown) {
       console.error('Login error:', error);
       const message = error instanceof Error ? error.message : 'Login failed';
